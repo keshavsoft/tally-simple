@@ -9,6 +9,7 @@ These are the paths intentionally exposed by the package. The root tally is pres
 | tally.masters.units.fetch(company) | masters.units.fetch | Unit with $$Alias:Name |
 | tally.masters.stockItems.withBatches(company) | masters.stockItems.withBatches | StockItem with base units and batch allocations |
 | tally.masters.ledgers.withGstDetails(company) | masters.ledgers.withGstDetails | Ledger with GST registration details |
+| tally.masters.stockGroup.withParent(company) | masters.stockGroup.withParent | StockGroup with parent group |
 
 All current calls:
 
@@ -18,7 +19,7 @@ All current calls:
 - use the configured endpoint and headers;
 - reject blank company names.
 
-The runtime definitions live in `src/v2/source.json`. The public allowlist lives in `src/v2/external-api/api.json`; only paths in that allowlist are exposed by the package and CLI. The older `archive/v1` tree is retained as historical material.
+The runtime definitions live in the active `src/vN/source.json`. The public allowlist lives in the matching `src/vN/external-api/api.json`; only paths in that allowlist are exposed by the package and CLI. Older version trees are retained as historical material.
 
 ## Request shape
 

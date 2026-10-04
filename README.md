@@ -111,6 +111,7 @@ npx tally-simple masters.units.fetch
 | masters.units.fetch | Units and their aliases |
 | masters.stockItems.withBatches | Stock items, base units, and batch allocations |
 | masters.ledgers.withGstDetails | Ledgers and GST registration details |
+| masters.stockGroup.withParent | Stock groups and their parent groups |
 
 Every query accepts one company name. Blank company names are rejected before a request is sent. HTTP errors include the status and response body.
 
@@ -120,6 +121,7 @@ Every query accepts one company name. Blank company names are rejected before a 
 - [CLI reference](docs/cli.md): see options, environment variables, piping, and errors.
 - [Available query paths](docs/api.md): see the public API and the TDL each path requests.
 - [Architecture story](docs/architecture.md): see how one definition drives the client and CLI.
+- [Developer guide](docs/development.md): see versioning, declaration generation, and verification.
 - [Visual guide](docs/index.html): a dependency-free HTML walkthrough of the same flow.
 
 The source code is on [GitHub](https://github.com/keshavsoft/tally-simple), and the published package is on [npm](https://www.npmjs.com/package/tally-simple).

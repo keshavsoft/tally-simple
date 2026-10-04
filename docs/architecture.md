@@ -7,7 +7,7 @@
 The package has one query model and two entrypoints:
 
 ~~~text
-src/v2/source.json
+src/vN/source.json
         │
         ├── external-api/api.json ──> generated JavaScript client ──> application imports
         │
@@ -16,7 +16,19 @@ src/v2/source.json
 external-api/api.json ──> tally-simple CLI ──> stdout
 ~~~
 
-`src/v2/source.json` owns the TDL collection definitions and the default request envelope. `src/v2/external-api/api.json` is the product boundary: only paths listed there become public methods or CLI commands. The archived `archive/v1` tree is not used by the published runtime.
+The highest numbered version under `src/` owns the current TDL collection definitions and default request envelope. Its matching `external-api/api.json` is the product boundary: only paths listed there become public methods or CLI commands. Older version trees and `archive/` are not used by the published runtime.
+
+## Stable package boundary
+
+Version folders can grow without changing what package users import:
+
+~~~text
+package.json
+    ├── import ──> src/index.js ──> src/vN/index.js
+    └── types  ──> src/index.d.ts  <── generated from highest src/vN
+~~~
+
+When a new version is created, update `src/index.js` to point to it and run `npm run generate:dts`. The generator selects the highest `src/vN`, checks that the runtime entrypoint points to the same version, and refreshes the stable declaration file.
 
 ## Request lifecycle
 
@@ -32,8 +44,8 @@ The default client is useful for a quick start. createTallyClient() provides the
 
 ## Adding a public endpoint
 
-1. Add the TDL definition under `src/v2/source.json`.
-2. Add its complete path to `src/v2/external-api/api.json`.
+1. Add the TDL definition under the active `src/vN/source.json`.
+2. Add its complete path to the matching `src/vN/external-api/api.json`.
 3. Run npm run generate:dts.
 4. Add or update an offline test.
 5. Run npm run verify.

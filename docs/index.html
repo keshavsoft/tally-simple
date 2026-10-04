@@ -126,6 +126,28 @@
         .two-col { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
         .label { margin-bottom: 12px; color: var(--blue); font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
 
+        .version-story {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            align-items: stretch;
+        }
+        .version-card {
+            min-height: 176px;
+            padding: 22px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: var(--panel);
+        }
+        .version-card.active { border-color: rgba(112, 224, 192, .65); background: rgba(112, 224, 192, .08); }
+        .version-card .label { color: var(--mint); }
+        .version-card p { margin-bottom: 0; }
+        .version-arrow { display: grid; place-items: center; color: var(--amber); font-size: 1.7rem; }
+        .maintainer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 26px; }
+        .maintainer-step { padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: rgba(7, 16, 29, .62); }
+        .maintainer-step strong { display: block; margin-bottom: 8px; color: var(--ink); }
+        .maintainer-step code { font-size: .78rem; }
+
         pre {
             position: relative;
             overflow: auto;
@@ -172,6 +194,8 @@
             header { padding-bottom: 64px; }
             nav { align-items: flex-start; flex-direction: column; margin-bottom: 54px; }
             .story, .two-col { grid-template-columns: 1fr; }
+            .version-story, .maintainer-grid { grid-template-columns: 1fr; }
+            .version-arrow { transform: rotate(90deg); }
             .story-card:not(:last-child)::after { content: "↓"; right: auto; top: auto; bottom: -27px; left: 50%; }
             th, td { padding: 12px; }
         }
@@ -185,6 +209,7 @@
                 <a href="#story">Story</a>
                 <a href="#use">Use it</a>
                 <a href="#queries">Queries</a>
+                <a href="#maintain">Maintainers</a>
                 <a href="https://github.com/keshavsoft/tally-simple">GitHub</a>
                 <a href="https://www.npmjs.com/package/tally-simple">npm</a>
             </div>
@@ -281,8 +306,41 @@ npx tally-simple masters.units.fetch</code></pre>
                         <tr><td>What units and aliases exist?</td><td><code>tally.masters.units.fetch(company)</code></td><td><code>masters.units.fetch</code></td></tr>
                         <tr><td>Which stock items have batches?</td><td><code>tally.masters.stockItems.withBatches(company)</code></td><td><code>masters.stockItems.withBatches</code></td></tr>
                         <tr><td>Which ledgers have GST details?</td><td><code>tally.masters.ledgers.withGstDetails(company)</code></td><td><code>masters.ledgers.withGstDetails</code></td></tr>
+                        <tr><td>Which stock groups have parents?</td><td><code>tally.masters.stockGroup.withParent(company)</code></td><td><code>masters.stockGroup.withParent</code></td></tr>
                     </tbody>
                 </table>
+            </div>
+        </section>
+
+        <section id="maintain">
+            <div class="wrap">
+                <div class="section-intro">
+                    <div class="eyebrow">For maintainers</div>
+                    <h2>Versions can grow without moving the package boundary.</h2>
+                    <p>Keep old versions intact under <code>src/vN</code>. The runtime entrypoint stays at <code>src/index.js</code>, and IntelliSense stays at <code>src/index.d.ts</code>.</p>
+                </div>
+                <div class="version-story">
+                    <article class="version-card">
+                        <div class="label">Version folders</div>
+                        <h3><code>src/v1</code> · <code>src/v2</code> · <code>src/v3</code></h3>
+                        <p>Keep each version's source and public API definition together.</p>
+                    </article>
+                    <div class="version-arrow" aria-hidden="true">→</div>
+                    <article class="version-card active">
+                        <div class="label">Highest version</div>
+                        <h3><code>src/vN</code> becomes active</h3>
+                        <p>The generator selects the highest numbered version and checks <code>src/index.js</code> points to it.</p>
+                    </article>
+                </div>
+                <div class="maintainer-grid">
+                    <article class="maintainer-step"><strong>1 · Discover</strong><code>find-active-version.js</code><p>Find the highest version.</p></article>
+                    <article class="maintainer-step"><strong>2 · Load</strong><code>load-version-definition.js</code><p>Validate API and source data.</p></article>
+                    <article class="maintainer-step"><strong>3 · Render</strong><code>render-declaration.js</code><p>Build readable IntelliSense.</p></article>
+                    <article class="maintainer-step"><strong>4 · Generate</strong><code>npm run generate:dts</code><p>Write stable <code>src/index.d.ts</code>.</p></article>
+                </div>
+                <div class="note" style="margin-top: 26px">
+                    <p><strong>One command:</strong> after updating the active version, run <code>npm run generate:dts</code>. If the highest version and <code>src/index.js</code> disagree, generation stops with an actionable error instead of producing mismatched types.</p>
+                </div>
             </div>
         </section>
 
@@ -315,7 +373,7 @@ npx tally-simple masters.units.fetch</code></pre>
 
     <footer class="wrap">
         <p><strong>Tally Simple</strong> · MIT licensed · zero runtime dependencies</p>
-        <p><a href="https://www.npmjs.com/package/tally-simple">npm package</a> · <a href="https://github.com/keshavsoft/tally-simple">source on GitHub</a> · <a href="../README.md">README</a></p>
+        <p><a href="https://www.npmjs.com/package/tally-simple">npm package</a> · <a href="https://github.com/keshavsoft/tally-simple">source on GitHub</a> · <a href="../README.md">README</a> · <a href="architecture.md">architecture</a> · <a href="development.md">developer guide</a></p>
     </footer>
 
     <script>

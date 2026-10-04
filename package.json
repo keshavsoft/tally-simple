@@ -33,7 +33,7 @@
         "LICENSE"
     ],
     "scripts": {
-        "generate:dts": "node src/generate-dts.js",
+        "generate:dts": "node generate-dts.js",
         "test": "node --test test/test.js test/units.js",
         "verify": "npm run generate:dts && npm test",
         "prepack": "npm run verify",

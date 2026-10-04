@@ -1,1 +1,1 @@
-import "./src/generate-dts.js";
+import "./scripts/dts/generate-dts.js";
