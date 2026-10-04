@@ -1,0 +1,40 @@
+{
+    "tally": {
+        "connection": {
+            "url": "http://localhost:9000",
+            "method": "POST",
+            "headers": {
+                "Content-Type": "text/xml"
+            }
+        },
+        "request": {
+            "body": "<ENVELOPE>\n<HEADER>\n<VERSION>1</VERSION>\n<TALLYREQUEST>Export</TALLYREQUEST>\n<TYPE>Collection</TYPE>\n<ID>TDLID</ID>\n</HEADER>\n<BODY>\n<DESC>\n<STATICVARIABLES>\n<SVEXPORTFORMAT>$$SysName:XML</SVEXPORTFORMAT>\n<SVCURRENTCOMPANY>{company}</SVCURRENTCOMPANY>\n</STATICVARIABLES>\n<TDL>\n<TDLMESSAGE>\n<COLLECTION NAME=\"TDLID\">\n{collectionBody}</COLLECTION>\n</TDLMESSAGE>\n</TDL>\n</DESC>\n</BODY>\n</ENVELOPE>"
+        },
+        "masters": {
+            "units": {
+                "fetch": {
+                    "tdl": {
+                        "collection": "<TYPE>Unit</TYPE>\n<FETCH>$$Alias:Name</FETCH>\n"
+                    },
+                    "action": "fetch"
+                }
+            },
+            "stockItems": {
+                "withBatches": {
+                    "tdl": {
+                        "collection": "<TYPE>StockItem</TYPE><FETCH>$$Alias:Name</FETCH><FETCH>BaseUnits</FETCH><FETCH>BatchAllocations.*</FETCH>"
+                    },
+                    "action": "fetch"
+                }
+            },
+            "ledgers": {
+                "withGstDetails": {
+                    "tdl": {
+                        "collection": "<TYPE>Ledger</TYPE><FETCH>$$Alias:Name</FETCH><FETCH>LEDGSTREGDETAILS.LIST</FETCH>"
+                    },
+                    "action": "fetch"
+                }
+            }
+        }
+    }
+}

@@ -1,6 +1,6 @@
 {
     "name": "tally-simple",
-    "version": "1.0.0",
+    "version": "1.2.1",
     "description": "A small, typed JavaScript client and CLI for querying Tally through TDL definitions.",
     "type": "module",
     "exports": {

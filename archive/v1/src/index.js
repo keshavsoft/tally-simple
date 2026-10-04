@@ -1,4 +1,4 @@
-import { createApi } from "./v2/index.js";
+import { createApi } from "./v1/index.js";
 
 const createTallyClient = (options = {}) => createApi(options);
 
