@@ -1,28 +1,20 @@
-# Published API paths
+[**View this document as HTML**](./api.html)
 
-[Back to the package on npm](https://www.npmjs.com/package/tally-simple) · [Back to the README](../README.md)
+# API Reference
 
-These are the paths intentionally exposed by the package. The root tally is present on the default JavaScript import, while the CLI accepts paths with or without that root.
+The public API is generated from `src/v1/external-api/api.json`.
 
-| JavaScript call | CLI path | TDL request |
-| --- | --- | --- |
-| tally.masters.units.fetch(company) | masters.units.fetch | Unit with $$Alias:Name |
-| tally.masters.stockItems.withBatches(company) | masters.stockItems.withBatches | StockItem with base units and batch allocations |
-| tally.masters.ledgers.withGstDetails(company) | masters.ledgers.withGstDetails | Ledger with GST registration details |
-| tally.masters.stockGroup.withParent(company) | masters.stockGroup.withParent | StockGroup with parent group |
+Current public paths:
 
-All current calls:
+```text
+tally.masters.units.fetch
+tally.masters.stockItems.withBatches
+```
 
-- accept one company name;
-- make a POST request with XML;
-- return Tally's response body as a string;
-- use the configured endpoint and headers;
-- reject blank company names.
+Example:
 
-The runtime definitions live in the active `src/vN/source.json`. The public allowlist lives in the matching `src/vN/external-api/api.json`; only paths in that allowlist are exposed by the package and CLI. Older version trees are retained as historical material.
+```js
+await tally.masters.units.fetch("Mani9");
+```
 
-## Request shape
-
-Each call sends a `POST` request to the configured Tally endpoint. The company name is inserted into the standard XML export envelope and escaped before the request is sent. The collection-specific TDL is then added to that envelope.
-
-The response is returned unchanged as a string. Parsing XML is intentionally left to the consuming application or shell pipeline.
+The exact public surface should be changed through `external-api/api.json`, followed by declaration generation.

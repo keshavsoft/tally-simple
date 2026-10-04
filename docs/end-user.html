@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>End User</title>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;max-width:900px;margin:40px auto;padding:0 24px;line-height:1.65;color:#202124}
+nav{padding:12px 16px;margin-bottom:28px;background:#f5f5f5;border-radius:8px}
+nav a{margin-right:16px;text-decoration:none}
+h1{font-size:30px;margin-top:0}
+h2{font-size:22px;margin-top:32px}
+h3{font-size:18px;margin-top:24px}
+pre{background:#f6f8fa;padding:16px;border-radius:8px;overflow:auto}
+code{background:#f1f3f4;padding:2px 5px;border-radius:4px}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:16px 0}
+th,td{border:1px solid #ddd;padding:8px;text-align:left}
+th{background:#f6f6f6}
+a{color:#0969da}
+</style>
+</head>
+<body>
+<nav>
+<a href="../README.html">README</a>
+<a href="end-user.html">End User</a>
+<a href="developer.html">Application Developer</a>
+<a href="repo-developer.html">Repository Developer</a>
+<a href="api.html">API</a>
+<a href="architecture.html">Architecture</a>
+</nav>
+<h1>End User Guide</h1>
+<p>This guide is for someone who wants to use the Tally package, not modify it.</p>
+<h2>JavaScript</h2>
+<pre><code>import tally from &quot;./src/index.js&quot;;
+
+const units = await tally.masters.units.fetch(&quot;Mani9&quot;);
+console.log(units);</code></pre>
+<p>The company name is supplied by the caller:</p>
+<pre><code>tally.masters.units.fetch(&quot;My Company&quot;);</code></pre>
+<p>The package builds the Tally request internally.</p>
+<h2>What you receive</h2>
+<p>The Tally response is returned as XML text. This package does not force an XML-to-JSON format on the consumer.</p>
+<p>You can parse or transform the response with the tool you prefer.</p>
+<h2>Public API</h2>
+<p>See <a href="api.md">API Reference</a> for the currently exposed operations.</p>
+<p>If you are integrating this package into a larger application, continue with the <a href="developer.md">Application Developer Guide</a>.</p>
+</body>
+</html>
