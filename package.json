@@ -1,6 +1,6 @@
 {
     "name": "tally-simple",
-    "version": "1.2.2",
+    "version": "1.3.1",
     "description": "A small, typed JavaScript client and CLI for querying Tally through TDL definitions.",
     "homepage": "https://github.com/keshavsoft/tally-simple#readme",
     "repository": {
@@ -33,7 +33,7 @@
         "LICENSE"
     ],
     "scripts": {
-        "generate:dts": "node generate-dts.js",
+        "generate:dts": "node src/generate-dts.js",
         "test": "node --test test/test.js test/units.js",
         "verify": "npm run generate:dts && npm test",
         "prepack": "npm run verify",
