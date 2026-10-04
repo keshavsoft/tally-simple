@@ -1,0 +1,47 @@
+{
+    "name": "tally-simple",
+    "version": "1.0.0",
+    "description": "A small, typed JavaScript client and CLI for querying Tally through TDL definitions.",
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./src/index.d.ts",
+            "import": "./src/index.js",
+            "default": "./src/index.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "bin": {
+        "tally-simple": "./bin/tally-simple.js"
+    },
+    "main": "./src/index.js",
+    "types": "./src/index.d.ts",
+    "files": [
+        "bin",
+        "src",
+        "docs",
+        "README.md",
+        "CHANGELOG.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "generate:dts": "node generate-dts.js",
+        "test": "node --test test/test.js test/units.js",
+        "verify": "npm run generate:dts && npm test",
+        "prepack": "npm run verify",
+        "prepublishOnly": "npm run verify"
+    },
+    "keywords": [
+        "tally",
+        "tdl",
+        "api",
+        "accounting"
+    ],
+    "license": "MIT",
+    "engines": {
+        "node": ">=20.10"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}

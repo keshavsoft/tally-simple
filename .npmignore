@@ -1,0 +1,5 @@
+test/
+*.zip
+.git/
+.gitignore
+.npmignore
