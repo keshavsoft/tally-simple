@@ -1,0 +1,5 @@
+[
+  "tally.masters.units.fetch",
+  "tally.masters.stockItems.withBatches",
+  "tally.masters.ledgers.withGstDetails"
+]
