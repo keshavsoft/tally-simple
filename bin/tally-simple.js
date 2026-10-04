@@ -21,8 +21,8 @@ const usage = [
     "  -h, --help             Show this help",
     "  -v, --version          Show the package version",
     "",
-    "The API path is one of the paths listed in docs/api.md. The response is written",
-    "to stdout exactly as Tally returns it, so it can be piped to another command.",
+    "The API path is one of the paths listed in docs/api.md. The response body is",
+    "written to stdout with a trailing newline, so it can be piped to another command.",
     ""
 ].join("\n");
 

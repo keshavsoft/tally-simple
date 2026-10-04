@@ -2,8 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 const rootDir = new URL(".", import.meta.url);
-const apiFile = new URL("./src/v1/external-api/api.json", rootDir);
-const sourceFile = new URL("./src/v1/source.json", rootDir);
+const apiFile = new URL("./src/v2/external-api/api.json", rootDir);
+const sourceFile = new URL("./src/v2/source.json", rootDir);
 const outputFile = new URL("./src/index.d.ts", rootDir);
 
 const apiPaths = JSON.parse(fs.readFileSync(apiFile, "utf8"));
@@ -105,4 +105,4 @@ export declare const tally: TallyApi;
 export default ${rootName};
 `;
 fs.writeFileSync(outputFile, declaration);
-console.log(`Generated ${path.basename(outputFile.pathname)} from src/v1/external-api/api.json`);
+console.log(`Generated ${path.basename(outputFile.pathname)} from src/v2/external-api/api.json`);
