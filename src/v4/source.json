@@ -1,0 +1,38 @@
+{
+    "tally": {
+        "masters": {
+            "units": {
+                "fetch": {
+                    "tdl": {
+                        "collection": "<TYPE>Unit</TYPE>\n<FETCH>$$Alias:Name</FETCH>\n"
+                    },
+                    "action": "fetch"
+                }
+            },
+            "stockItems": {
+                "withBatches": {
+                    "tdl": {
+                        "collection": "<TYPE>StockItem</TYPE><FETCH>$$Alias:Name</FETCH><FETCH>BaseUnits</FETCH><FETCH>BatchAllocations.*</FETCH>"
+                    },
+                    "action": "fetch"
+                }
+            },
+            "ledgers": {
+                "withGstDetails": {
+                    "tdl": {
+                        "collection": "<TYPE>Ledger</TYPE><FETCH>$$Alias:Name</FETCH><FETCH>LEDGSTREGDETAILS.LIST</FETCH>"
+                    },
+                    "action": "fetch"
+                }
+            },
+            "stockGroup": {
+                "withParent": {
+                    "tdl": {
+                        "collection": "<TYPE>StockGroup</TYPE><FETCH>$$Alias:Name</FETCH><FETCH>Parent</FETCH>"
+                    },
+                    "action": "fetch"
+                }
+            }
+        }
+    }
+}
