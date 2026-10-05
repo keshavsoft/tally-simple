@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Queries — Tally Simple</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="doc-nav">
+            <a href="index.html">&larr; Documentation Hub</a>
+            <a href="queries.md">View Markdown</a>
+        </nav>
+
+        <h1>Available Queries Reference</h1>
+        <p>This document details the queries available in Tally Simple, the underlying TDL requests generated, and the XML data returned.</p>
+
+        <h2>Master Endpoints Overview</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Query Path</th>
+                    <th>Domain Object</th>
+                    <th>TDL Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>tally.masters.units.fetch</code></td>
+                    <td>Unit of Measurement</td>
+                    <td><code>fetch</code></td>
+                </tr>
+                <tr>
+                    <td><code>tally.masters.stockItems.withBatches</code></td>
+                    <td>Inventory Stock Item</td>
+                    <td><code>fetch</code></td>
+                </tr>
+                <tr>
+                    <td><code>tally.masters.ledgers.withGstDetails</code></td>
+                    <td>Accounting Ledger</td>
+                    <td><code>fetch</code></td>
+                </tr>
+                <tr>
+                    <td><code>tally.masters.stockGroup.withParent</code></td>
+                    <td>Stock Classification</td>
+                    <td><code>fetch</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>1. Units (<code>masters.units.fetch</code>)</h2>
+        <p>Fetches all defined units of measurement in the specified company along with their aliases and names.</p>
+        <pre><code>&lt;TYPE&gt;Unit&lt;/TYPE&gt;
+&lt;FETCH&gt;$$Alias:Name&lt;/FETCH&gt;</code></pre>
+
+        <h2>2. Stock Items with Batches (<code>masters.stockItems.withBatches</code>)</h2>
+        <p>Fetches stock items including their base unit of measure and batch allocation details.</p>
+        <pre><code>&lt;TYPE&gt;StockItem&lt;/TYPE&gt;
+&lt;FETCH&gt;$$Alias:Name&lt;/FETCH&gt;
+&lt;FETCH&gt;BaseUnits&lt;/FETCH&gt;
+&lt;FETCH&gt;BatchAllocations.*&lt;/FETCH&gt;</code></pre>
+
+        <h2>3. Ledgers with GST Details (<code>masters.ledgers.withGstDetails</code>)</h2>
+        <p>Fetches accounting ledgers including their GST registration details list.</p>
+        <pre><code>&lt;TYPE&gt;Ledger&lt;/TYPE&gt;
+&lt;FETCH&gt;$$Alias:Name&lt;/FETCH&gt;
+&lt;FETCH&gt;LEDGSTREGDETAILS.LIST&lt;/FETCH&gt;</code></pre>
+
+        <h2>4. Stock Groups with Parent (<code>masters.stockGroup.withParent</code>)</h2>
+        <p>Fetches stock groups and their parent group hierarchy.</p>
+        <pre><code>&lt;TYPE&gt;StockGroup&lt;/TYPE&gt;
+&lt;FETCH&gt;$$Alias:Name&lt;/FETCH&gt;
+&lt;FETCH&gt;Parent&lt;/FETCH&gt;</code></pre>
+
+        <h2>The Request Envelope</h2>
+        <p>Tally Simple dynamically injects the company name and TDL collection into Tally's standard Export Collection envelope:</p>
+        <pre><code>&lt;ENVELOPE&gt;
+  &lt;HEADER&gt;
+    &lt;VERSION&gt;1&lt;/VERSION&gt;
+    &lt;TALLYREQUEST&gt;Export&lt;/TALLYREQUEST&gt;
+    &lt;TYPE&gt;Collection&lt;/TYPE&gt;
+    &lt;ID&gt;TDLID&lt;/ID&gt;
+  &lt;/HEADER&gt;
+  &lt;BODY&gt;
+    &lt;DESC&gt;
+      &lt;STATICVARIABLES&gt;
+        &lt;SVEXPORTFORMAT&gt;$$SysName:XML&lt;/SVEXPORTFORMAT&gt;
+        &lt;SVCURRENTCOMPANY&gt;{company}&lt;/SVCURRENTCOMPANY&gt;
+      &lt;/STATICVARIABLES&gt;
+      &lt;TDL&gt;
+        &lt;TDLMESSAGE&gt;
+          &lt;COLLECTION NAME="TDLID"&gt;
+            {collectionBody}
+          &lt;/COLLECTION&gt;
+        &lt;/TDLMESSAGE&gt;
+      &lt;/TDL&gt;
+    &lt;/DESC&gt;
+  &lt;/BODY&gt;
+&lt;/ENVELOPE&gt;</code></pre>
+
+        <footer>
+            <p>&copy; KeshavSoft. Distributed under the MIT License.</p>
+        </footer>
+    </div>
+</body>
+</html>

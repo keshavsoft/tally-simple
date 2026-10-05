@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Execution Pipeline — Tally Simple</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="doc-nav">
+            <a href="index.html">&larr; Documentation Hub</a>
+            <a href="execution-pipeline.md">View Markdown</a>
+        </nav>
+
+        <h1>Execution Pipeline</h1>
+        <p>When a consumer invokes an endpoint like <code>tally.masters.units.fetch("Mani9")</code>, the execution engine handles the request through a clean, 4-step pipeline.</p>
+
+        <h2>The Pipeline Flow</h2>
+        <pre><code>Invocation: tally.masters.units.fetch("Mani9")
+  │
+  ▼
+Step 1: validateCompany({ inCompany })
+  │  Ensures company is a non-empty string; returns trimmed name
+  ▼
+Step 2: getTdl({ inSource, inRoutePath })
+  │  Direct O(1) path lookup of TDL collection query from source.json
+  ▼
+Step 3: buildXmlBody({ inCompany, inTdl })
+  │  XML-escapes company name and injects into XML envelope template
+  ▼
+Step 4: postHttp({ inXmlBody })
+  │  Sends HTTP POST to Tally (http://localhost:9000) and returns XML text
+  ▼
+Caller receives raw XML string</code></pre>
+
+        <h2>The Four Narrative Steps</h2>
+
+        <h3>Step 1: Validate Company Name (<code>validateCompany.js</code>)</h3>
+        <p>Verifies that the supplied company name is a non-empty string. Throws early if invalid.</p>
+
+        <h3>Step 2: Direct TDL Lookup (<code>getTdl.js</code>)</h3>
+        <p>Instead of crawling or traversing the JSON structure, the endpoint is retrieved in a single line using path reduction.</p>
+
+        <h3>Step 3: XML Body Construction (<code>buildXmlBody.js</code>)</h3>
+        <p>Safely escapes XML special characters in the company name and substitutes <code>{company}</code> and <code>{collectionBody}</code> into the envelope template.</p>
+
+        <h3>Step 4: HTTP Transport (<code>postHttp.js</code>)</h3>
+        <p>Performs a standard <code>POST</code> request to <code>http://localhost:9000</code> with <code>Content-Type: text/xml</code>.</p>
+
+        <h2>The Coordinator (<code>index.js</code>)</h2>
+        <p>The main entry point reads like a 4-line story:</p>
+        <pre><code>const companyName = validateCompany({ inCompany: localCompany });
+const tdl = getTdl({ inSource: localSource, inRoutePath: localRoutePath });
+const xmlBody = buildXmlBody({ inCompany: companyName, inTdl: tdl });
+
+return await postHttp({ inXmlBody: xmlBody });</code></pre>
+
+        <h2>Architectural Highlights</h2>
+        <ul>
+            <li><strong>Direct Resolution:</strong> No recursion, no skipping keys, no runtime guessing.</li>
+            <li><strong>Single Responsibility:</strong> Each file does exactly one job.</li>
+            <li><strong>Strict Single Export:</strong> Every file exports <code>export default startFunc;</code>.</li>
+        </ul>
+
+        <footer>
+            <p>&copy; KeshavSoft. Distributed under the MIT License.</p>
+        </footer>
+    </div>
+</body>
+</html>
