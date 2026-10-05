@@ -3,7 +3,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import packageInfo from "../package.json" with { type: "json" };
-import tally, { createTallyClient } from "../src/index.js";
+import tally from "../src/index.js";
 
 const usage = [
     "Usage:",
@@ -151,12 +151,7 @@ const run = async (args) => {
         throw new Error("A company is required. Pass --company or set TALLY_COMPANY.");
     }
 
-    const client = createTallyClient({
-        url: parsed.url ?? process.env.TALLY_URL,
-        headers: parsed.headers,
-        timeout: parsed.timeout
-    });
-    const endpoint = findEndpoint(parsed.apiPath, client);
+    const endpoint = findEndpoint(parsed.apiPath, tally);
     const response = await endpoint(company);
 
     process.stdout.write(response + "\n");
