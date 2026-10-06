@@ -1,10 +1,8 @@
 import attachPath from "./attachPath.js";
 
-import source from "../../source.json" with { type: "json" };
-
-const startFunc = ({ inApiPaths, inExecutor }) => {
+const startFunc = ({ inApiPaths, inSource, inExecutor }) => {
     const localApiPaths = inApiPaths;
-    const localSource = source;
+    const localSource = inSource;
     const localExecutor = inExecutor;
 
     const tree = {};

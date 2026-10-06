@@ -18,59 +18,56 @@
 
         <h2>Architectural Overview</h2>
         <pre><code>┌─────────────────────────────────────────────────────────────┐
-│                       Public Perimeter                      │
+│                 1. Declarative Specifications               │
 │                                                             │
-│   external-api/api.json ───► external-api/api.js            │
-│   (Allowed Paths List)       (Public Client Facade)         │
-└─────────────────────────┬───────────────────────────────────┘
-                          │
-                          ▼
+│   src/v7/api.json                 src/v7/source.json        │
+│   (Public Route Allowlist)        (TDL Definition Tree)     │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    Internal Working Engines                 │
+│                 2. Public Composition Root                  │
 │                                                             │
-│   internal-working/route/     internal-working/execution/   │
-│   (Object Tree Assembly)      (4-Step Request Pipeline)     │
-└─────────────────────────┬───────────────────────────────────┘
-                          │
-                          ▼
+│   src/v7/index.js                                           │
+│   (Injects Specifications into Route &amp; Execution Engines)   │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                   Domain Specification                      │
+│                 3. Internal Working Engines                 │
 │                                                             │
-│   source.json                                               │
-│   (TDL Queries &amp; Actions Only)                              │
+│   internal-working/route/         internal-working/execution│
+│   (Object Tree Assembly)          (4-Step Request Pipeline) │
 └─────────────────────────────────────────────────────────────┘</code></pre>
 
         <h2>The Three Layers</h2>
 
-        <h3>1. The Public Perimeter (<code>external-api/</code>)</h3>
+        <h3>1. The Declarative Specifications (<code>src/v7/</code>)</h3>
         <ul>
-            <li><strong><code>api.json</code></strong>: An explicit allowlist array containing only the dot-separated paths that should be exposed to consumers (e.g. <code>tally.masters.units.fetch</code>).</li>
-            <li><strong><code>api.js</code></strong>: Connects <code>api.json</code> and <code>source.json</code> through the internal route engine and exports a single, ready-to-use client.</li>
+            <li><strong><code>api.json</code> (The Allowlist)</strong>: An explicit array of dot-separated string paths that declare the public API boundary (e.g., <code>["tally.masters.units.fetch", "tally.masters.stockItems.withBatches", ...]</code>).</li>
+            <li><strong><code>source.json</code> (The Tree of Truth)</strong>: A pure domain tree containing the TDL collection queries (<code>&lt;TYPE&gt;Unit&lt;/TYPE&gt;...</code>) and actions. It is completely decoupled from transport and contains no connection settings or HTTP logic.</li>
         </ul>
 
-        <h3>2. The Internal Engines (<code>internal-working/</code>)</h3>
+        <h3>2. The Public Composition Root (<code>src/v7/index.js</code>)</h3>
         <ul>
-            <li><strong><code>route/</code></strong>: Assembles the nested, callable JavaScript object tree based on the allowlist.</li>
-            <li><strong><code>execution/</code></strong>: Executes the runtime query: validates the company argument, retrieves the TDL query from <code>source.json</code>, constructs the XML envelope, and sends the HTTP POST request to Tally.</li>
+            <li>Acts as the single entry point for the active version.</li>
+            <li>Imports <code>source.json</code> and <code>api.json</code> and injects them directly into the internal route builder via dependency injection.</li>
+            <li>Exports a single, ready-to-use default client object.</li>
         </ul>
 
-        <h3>3. The Pure Domain Specification (<code>source.json</code>)</h3>
+        <h3>3. The Internal Working Engines (<code>src/v7/internal-working/</code>)</h3>
         <ul>
-            <li><code>source.json</code> contains strictly the domain endpoint definitions and their TDL collections.</li>
-            <li>It is completely decoupled from transport details. It contains <strong>no</strong> connection settings (<code>http://localhost:9000</code>) and <strong>no</strong> XML envelope templates. Those belong strictly inside the execution pipeline.</li>
+            <li><strong><code>route/</code></strong>: Dynamically builds the nested, callable JavaScript object tree based on <code>api.json</code> without hardcoding methods.</li>
+            <li><strong><code>execution/</code></strong>: Executes the runtime query: validates the company argument, retrieves the TDL query from <code>source.json</code>, constructs the XML request envelope, and dispatches the HTTP POST request to Tally.</li>
         </ul>
 
         <h2>Architectural Principles</h2>
-        <ul>
+        <ol>
             <li><strong>Single Source of Truth for Domain Only:</strong> <code>source.json</code> is the authority on <em>what queries exist and what TDL they request</em>, not a dumping ground for server URLs or HTTP headers.</li>
-            <li><strong>Strictly One Export per File:</strong> Every file in the codebase exports exactly one default export (<code>export default startFunc;</code>). Dual/named exports are eliminated.</li>
+            <li><strong>Strictly One Export per File:</strong> Every module in the codebase adheres to a single default export (<code>export default startFunc;</code>).</li>
             <li><strong>Explicit Parameter Unwrapping:</strong> Every function accepts a single object with <code>in</code>-prefixed keys and unwraps them immediately to <code>local</code>-prefixed variables.</li>
-            <li><strong>Zero Overhead:</strong> No runtime dependencies, no intermediate proxy frameworks, and no recursive tree searches. Every path resolves directly.</li>
-        </ul>
-
-        <footer>
-            <p>&copy; KeshavSoft. Distributed under the MIT License.</p>
-        </footer>
+            <li><strong>Zero Runtime Dependencies:</strong> Built entirely on standard Node.js built-ins.</li>
+        </ol>
     </div>
 </body>
 </html>
