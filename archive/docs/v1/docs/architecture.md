@@ -1,73 +1,43 @@
-# System Architecture
+# Architecture and the package story
 
-[**View this document as HTML**](./architecture.html) · [**Documentation Hub**](./index.html)
+## One definition, two ways to use it
 
-Tally Simple is designed with strict boundaries separating the public contract from the internal execution engines.
+The package has one query model and two entrypoints:
 
----
+~~~text
+src/v1/source.json
+        │
+        ├── api.json ──> generated JavaScript client ──> application imports
+        │
+        └── request traversal ──> XML over HTTP ──> Tally
 
-## Architectural Overview
+api.json ──> tally-simple CLI ──> stdout
+~~~
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                       Public Perimeter                      │
-│                                                             │
-│   external-api/api.json ───► external-api/api.js            │
-│   (Allowed Paths List)       (Public Client Facade)         │
-└─────────────────────────┬───────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    Internal Working Engines                 │
-│                                                             │
-│   internal-working/route/     internal-working/execution/   │
-│   (Object Tree Assembly)      (4-Step Request Pipeline)     │
-└─────────────────────────┬───────────────────────────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   Domain Specification                      │
-│                                                             │
-│   source.json                                               │
-│   (TDL Queries & Actions Only)                              │
-└─────────────────────────────────────────────────────────────┘
-```
+source.json owns the TDL collection definitions and the default request envelope. api.json is the product boundary: only paths listed there become public methods or CLI commands.
 
----
+## Request lifecycle
 
-## The Three Layers
+1. An application or CLI selects a public path.
+2. The client validates and trims the company name.
+3. The path is traversed into the source definition.
+4. The company is XML-escaped and inserted into the request envelope.
+5. The collection body is inserted into the envelope.
+6. The configured fetch implementation sends the request to Tally.
+7. The response body is returned as text; non-2xx responses become errors.
 
-### 1. The Public Perimeter (`external-api/`)
-- **`api.json`**: An explicit allowlist array containing only the dot-separated paths that should be exposed to consumers (e.g. `tally.masters.units.fetch`).
-- **`api.js`**: Connects `api.json` and `source.json` through the internal route engine and exports a single, ready-to-use client.
+The default client is useful for a quick start. createTallyClient() provides the boundary for applications that need a different URL, headers, timeout, or fetch implementation.
 
-### 2. The Internal Engines (`internal-working/`)
-- **`route/`**: Assembles the nested, callable JavaScript object tree based on the allowlist.
-- **`execution/`**: Executes the runtime query: validates the company argument, retrieves the TDL query from `source.json`, constructs the XML envelope, and sends the HTTP POST request to Tally.
+## Adding a public endpoint
 
-### 3. The Pure Domain Specification (`source.json`)
-- `source.json` contains strictly the domain endpoint definitions and their TDL collections.
-- It is completely decoupled from transport details. It contains **no** connection settings (`http://localhost:9000`) and **no** XML envelope templates. Those belong strictly inside the execution pipeline.
+1. Add the TDL definition under src/v1/source.json.
+2. Add its complete path to src/v1/external-api/api.json.
+3. Run npm run generate:dts.
+4. Add or update an offline test.
+5. Run npm run verify.
 
----
+Do not edit src/index.d.ts by hand; it is generated from the public path list.
 
-## Architectural Principles
+## Publish boundary
 
-1. **Single Source of Truth for Domain Only:**
-   `source.json` is the authority on *what queries exist and what TDL they request*, not a dumping ground for server URLs or HTTP headers.
-
-2. **Strictly One Export per File:**
-   Every file in the codebase exports exactly one default export (`export default startFunc;`). Dual/named exports (`export { foo }; export default foo;`) are eliminated.
-
-3. **Explicit Parameter Unwrapping:**
-   Every function accepts a single object with `in`-prefixed keys and unwraps them immediately to `local`-prefixed variables:
-   ```javascript
-   const startFunc = ({ inRoutePath, inCompany }) => {
-       const localRoutePath = inRoutePath;
-       const localCompany = inCompany;
-       ...
-   };
-   ```
-
-4. **Zero Overhead:**
-   No runtime dependencies, no intermediate proxy frameworks, and no recursive tree searches. Every path resolves directly.
+package.json exposes the ESM entrypoint and CLI explicitly. Its files allowlist publishes src, bin, docs, and the package-facing metadata while excluding tests and development scripts. prepublishOnly runs declaration generation and the offline test suite before npm publish.
