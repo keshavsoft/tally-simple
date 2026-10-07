@@ -54,6 +54,7 @@
     },
     "dependencies": {
         "@keshavsoft/api-tree": "^11.1.1",
+        "@keshavsoft/json-transformer": "^1.7.1",
         "tally-simple-json": "^1.16.3",
         "tally-spec": "^1.0.0"
     }
