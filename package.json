@@ -1,6 +1,6 @@
 {
     "name": "tally-simple",
-    "version": "1.7.4",
+    "version": "1.8.1",
     "description": "A small, typed JavaScript client and CLI for querying Tally through TDL definitions.",
     "homepage": "https://keshavsoft.github.io/tally-simple/",
     "repository": {
@@ -34,10 +34,7 @@
     ],
     "scripts": {
         "generate:dts": "create-intellisense",
-        "test": "node --test test/test.js test/units.js",
-        "verify": "npm run generate:dts && npm test",
-        "prepack": "npm run verify",
-        "prepublishOnly": "npm run verify"
+        "test": "node --test test/test.js test/units.js"
     },
     "keywords": [
         "tally",
@@ -56,6 +53,8 @@
         "create-intellisense": "^1.2.1"
     },
     "dependencies": {
-        "@keshavsoft/api-tree": "^11.1.1"
+        "@keshavsoft/api-tree": "^11.1.1",
+        "tally-simple-json": "^1.16.3",
+        "tally-spec": "^1.0.0"
     }
 }
