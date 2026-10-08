@@ -13,7 +13,7 @@ if (!app.tally) {
         value: app,
         enumerable: false
     });
-}
+};
 
 const call = createCaller({ inSource: source, inExecutor: execute });
 
