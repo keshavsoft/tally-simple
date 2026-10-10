@@ -1,6 +1,6 @@
 {
     "name": "tally-simple",
-    "version": "1.10.2",
+    "version": "1.10.3",
     "description": "A clean, typed JavaScript client for querying Tally and receiving schema-transformed, normalized JSON.",
     "homepage": "https://keshavsoft.github.io/tally-simple/",
     "repository": {

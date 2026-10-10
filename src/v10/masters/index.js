@@ -34,9 +34,11 @@ const masters = async (path, company) => {
 
     if (!jsonNeeded || !instructions) {
         return jsonNeeded ?? rawResponse;
-    }
+    };
 
-    return transform(jsonNeeded, instructions);
+    const fromTransform = transform(jsonNeeded, instructions);
+
+    return fromTransform;
 };
 
 export default masters;
