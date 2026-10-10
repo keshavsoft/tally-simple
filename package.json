@@ -1,6 +1,6 @@
 {
     "name": "tally-simple",
-    "version": "1.10.1",
+    "version": "1.10.2",
     "description": "A clean, typed JavaScript client for querying Tally and receiving schema-transformed, normalized JSON.",
     "homepage": "https://keshavsoft.github.io/tally-simple/",
     "repository": {
@@ -37,7 +37,6 @@
         "test": "node test/v9/company.js && node test/v9/units.js && node test/v9/stockItems.js && node test/v9/vouchers/sales.js",
         "test:v9": "node test/v9/company.js && node test/v9/units.js && node test/v9/stockItems.js && node test/v9/vouchers/sales.js"
     },
-
     "keywords": [
         "tally",
         "tdl",
