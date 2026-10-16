@@ -1,0 +1,31 @@
+import company from "./company/index.js";
+import masters from "./masters/index.js";
+import vouchers from "./vouchers/index.js";
+
+const call = async (input, companyName) => {
+    // console.log("        kkkkkkkkkkk ", input, companyName);
+
+    const route = String(input ?? "").trim();
+    const normalized = route.replace(/^tally\./i, "");
+    const splitArray = normalized.split(".");
+    const firstSegment = splitArray[0]?.trim();
+
+    if (!firstSegment) {
+        throw new Error("Missing route input");
+    };
+
+    if (firstSegment === "company") {
+        return await company();
+    };
+
+    if (firstSegment === "masters") {
+        splitArray.shift();
+
+        return await masters(splitArray.join("."));
+    };
+
+    throw new Error(`Unsupported route: ${input}`);
+};
+
+export { company, masters, vouchers, call };
+export default { company, masters, vouchers, call };

@@ -3,7 +3,7 @@ import { call, masters } from "../../../../src/index.js";
 
 const run = async () => {
     const batches = await call("masters.stockItems.withBatches", "mani9");
-    console.log("batches : ", batches);
+    console.log("batches : ", batches?.StockItems[0]);
 
     return await batches;
 };
