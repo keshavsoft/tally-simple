@@ -1,6 +1,7 @@
 import company from "./company/index.js";
 import masters from "./masters/index.js";
 import vouchers from "./vouchers/index.js";
+import reports from "./reports/index.js";
 
 const call = async (input, companyName) => {
     // console.log("        kkkkkkkkkkk ", input, companyName);
@@ -22,6 +23,12 @@ const call = async (input, companyName) => {
         splitArray.shift();
 
         return await masters(splitArray.join("."));
+    };
+
+    if (firstSegment === "reports") {
+        splitArray.shift();
+
+        return await reports(splitArray.join("."));
     };
 
     throw new Error(`Unsupported route: ${input}`);
