@@ -1,0 +1,27 @@
+{
+    "transform": {
+        "Receipts": {
+            "alterKey": "Receipts",
+            "valueType": "array"
+        }
+    },
+    "Receipts": {
+        "transform": {
+            "date": {
+                "valueKey": "value"
+            },
+            "ledgername": {
+                "valueKey": "value"
+            },
+            "vouchernumber": {
+                "valueKey": "value"
+            },
+            "isdeemedpositive": {
+                "valueKey": "value"
+            },
+            "amount": {
+                "valueKey": "value"
+            }
+        }
+    }
+}

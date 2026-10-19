@@ -4,8 +4,6 @@ import vouchers from "./vouchers/index.js";
 import reports from "./reports/index.js";
 
 const call = async (input, companyName) => {
-    // console.log("        kkkkkkkkkkk ", input, companyName);
-
     const route = String(input ?? "").trim();
     const normalized = route.replace(/^tally\./i, "");
     const splitArray = normalized.split(".");
@@ -29,6 +27,12 @@ const call = async (input, companyName) => {
         splitArray.shift();
 
         return await reports(splitArray.join("."));
+    };
+
+    if (firstSegment === "vouchers") {
+        splitArray.shift();
+
+        return await vouchers(splitArray.join("."));
     };
 
     throw new Error(`Unsupported route: ${input}`);

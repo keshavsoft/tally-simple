@@ -1,7 +1,7 @@
-import { vouchers as jsonVouchers } from "tally-simple-json";
+import { tdl } from "tally-http-json";
 import { source } from "tally-spec";
-import transform from "@keshavsoft/json-transformer";
-import resolvePath from "./resolvePath.js";
+import jsonTransformer from "json-transformer-found";
+import instructions from "./transform.json" with {type: "json"};
 
 const getLeafSpec = (sourceObj, dotPath) => {
     const segments = dotPath.split(".");
@@ -13,33 +13,19 @@ const getLeafSpec = (sourceObj, dotPath) => {
     return current;
 };
 
-/**
- * Story: Fetch and Transform Vouchers from Tally
- * 
- * 1. Calls tally-simple-json vouchers(path, company, fromDate, toDate) to fetch raw JSON.
- * 2. Resolves canonical spec path in tally-spec (e.g. "sales.fetch" -> source.tally.vouchers.sales.fetch).
- * 3. Applies @keshavsoft/json-transformer using the transform.instructions from tally-spec.
- * 
- * Inputs:
- * - path: The voucher route defined in JSON (e.g. "sales.fetch", "purchases.fetch")
- * - company: The target company name (e.g. "mani9")
- * - fromDate: Period start date (e.g. "20260401")
- * - toDate: Period end date (e.g. "20260401")
- */
-const vouchers = async (path, company, fromDate, toDate) => {
-    const rawResponse = await jsonVouchers(path, company, fromDate, toDate);
-    const jsonNeeded = rawResponse?.ENVELOPE?.BODY?.DATA?.COLLECTION;
+const company = async (path) => {
+    console.log("path : ", path);
 
-    const fullPath = resolvePath(path);
-    const leafSpec = getLeafSpec(source, fullPath);
-    const instructions = leafSpec?.transform?.instructions;
+    const leafSpec = getLeafSpec(source, `tally.vouchers.${path}`);
 
-    if (!jsonNeeded || !instructions) {
-        return jsonNeeded ?? rawResponse;
-    }
+    const tdlmessage = leafSpec?.tdlmessage;
+    console.log("tdlmessage : ", leafSpec);
 
-    return transform(jsonNeeded, instructions);
+    const rawResponse = await tdl(leafSpec?.resource, tdlmessage);
+
+    const fromTransform = jsonTransformer({ Receipts: rawResponse?.data?.collection }, instructions);
+
+    return await fromTransform;
 };
 
-export default vouchers;
-export { vouchers };
+export default company;
