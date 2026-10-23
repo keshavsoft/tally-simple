@@ -1,0 +1,28 @@
+{
+    "transform": {
+        "collection": {
+            "alterKey": "Batches",
+            "valueType": "array"
+        }
+    },
+    "Batches": {
+        "transform": {
+            "metadata": {
+                "alterKey": "BatchName",
+                "valueKey": "name"
+            },
+            "parent": {
+                "alterKey": "ItemName",
+                "valueKey": "value"
+            },
+            "godownname": {
+                "alterKey": "GodownName",
+                "valueKey": "value"
+            },
+            "closingbalance": {
+                "alterKey": "Balance",
+                "valueKey": "value"
+            }
+        }
+    }
+}

@@ -1,16 +1,9 @@
 import fs from "fs";
-import { call, masters } from "../../../../src/index.js";
+import { call } from "../../../../src/index.js";
 
 const run = async () => {
     const batches = await call("masters.stockItems.withBatches", "mani9");
     console.log("batches : ", batches?.StockItems[0]);
-
-    return await batches;
-};
-
-const specific = async () => {
-    const batches = await masters("stockItems.withBatches", "mani9");
-    console.log("batches : ", batches);
 
     return await batches;
 };
